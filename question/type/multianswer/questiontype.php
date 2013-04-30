@@ -273,7 +273,8 @@ define('NUMERICAL_ABS_ERROR_MARGIN', 6);
 // Remaining ANSWER regexes.
 define('ANSWER_TYPE_DEF_REGEX',
         '(NUMERICAL|NM)|(MULTICHOICE|MC)|(MULTICHOICE_V|MCV)|(MULTICHOICE_H|MCH)|' .
-                '(SHORTANSWER|SA|MW)|(SHORTANSWER_C|SAC|MWC)');
+        '(SHORTANSWER|SA|MW)|(SHORTANSWER_C|SAC|MWC)|' .
+        '(MULTICHOICE_O|MCO)|(MULTICHOICE_VS|MCVS)|(MULTICHOICE_HS|MCHS)');
 define('ANSWER_START_REGEX',
        '\{([0-9]*):(' . ANSWER_TYPE_DEF_REGEX . '):');
 
@@ -292,7 +293,10 @@ define('ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_REGULAR', 5);
 define('ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_HORIZONTAL', 6);
 define('ANSWER_REGEX_ANSWER_TYPE_SHORTANSWER', 7);
 define('ANSWER_REGEX_ANSWER_TYPE_SHORTANSWER_C', 8);
-define('ANSWER_REGEX_ALTERNATIVES', 9);
+define('ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_ORDERED', 9);
+define('ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_REGULAR_SHUFFLED', 10);
+define('ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_HORIZONTAL_SHUFFLED', 11);
+define('ANSWER_REGEX_ALTERNATIVES', 12);
 
 function qtype_multianswer_extract_question($text) {
     // Variable $text is an array [text][format][itemid].
@@ -347,6 +351,21 @@ function qtype_multianswer_extract_question($text) {
             $wrapped->incorrectfeedback['format'] = FORMAT_HTML;
             $wrapped->incorrectfeedback['itemid'] = '';
             $wrapped->layout = qtype_multichoice_base::LAYOUT_DROPDOWN;
+        } else if (!empty($answerregs[ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_ORDERED])) {
+            $wrapped->qtype = 'multichoice';
+            $wrapped->single = 1;
+            $wrapped->shuffleanswers = 0;
+            $wrapped->answernumbering = 0;
+            $wrapped->correctfeedback['text'] = '';
+            $wrapped->correctfeedback['format'] = FORMAT_HTML;
+            $wrapped->correctfeedback['itemid'] = '';
+            $wrapped->partiallycorrectfeedback['text'] = '';
+            $wrapped->partiallycorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->partiallycorrectfeedback['itemid'] = '';
+            $wrapped->incorrectfeedback['text'] = '';
+            $wrapped->incorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->incorrectfeedback['itemid'] = '';
+            $wrapped->layout = qtype_multichoice_base::LAYOUT_DROPDOWN;
         } else if (!empty($answerregs[ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_REGULAR])) {
             $wrapped->qtype = 'multichoice';
             $wrapped->single = 1;
@@ -362,10 +381,40 @@ function qtype_multianswer_extract_question($text) {
             $wrapped->incorrectfeedback['format'] = FORMAT_HTML;
             $wrapped->incorrectfeedback['itemid'] = '';
             $wrapped->layout = qtype_multichoice_base::LAYOUT_VERTICAL;
+        } else if (!empty($answerregs[ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_REGULAR_SHUFFLED])) {
+            $wrapped->qtype = 'multichoice';
+            $wrapped->single = 1;
+            $wrapped->shuffleanswers = 1;
+            $wrapped->answernumbering = 0;
+            $wrapped->correctfeedback['text'] = '';
+            $wrapped->correctfeedback['format'] = FORMAT_HTML;
+            $wrapped->correctfeedback['itemid'] = '';
+            $wrapped->partiallycorrectfeedback['text'] = '';
+            $wrapped->partiallycorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->partiallycorrectfeedback['itemid'] = '';
+            $wrapped->incorrectfeedback['text'] = '';
+            $wrapped->incorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->incorrectfeedback['itemid'] = '';
+            $wrapped->layout = qtype_multichoice_base::LAYOUT_VERTICAL;
         } else if (!empty($answerregs[ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_HORIZONTAL])) {
             $wrapped->qtype = 'multichoice';
             $wrapped->single = 1;
             $wrapped->shuffleanswers = 0;
+            $wrapped->answernumbering = 0;
+            $wrapped->correctfeedback['text'] = '';
+            $wrapped->correctfeedback['format'] = FORMAT_HTML;
+            $wrapped->correctfeedback['itemid'] = '';
+            $wrapped->partiallycorrectfeedback['text'] = '';
+            $wrapped->partiallycorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->partiallycorrectfeedback['itemid'] = '';
+            $wrapped->incorrectfeedback['text'] = '';
+            $wrapped->incorrectfeedback['format'] = FORMAT_HTML;
+            $wrapped->incorrectfeedback['itemid'] = '';
+            $wrapped->layout = qtype_multichoice_base::LAYOUT_HORIZONTAL;
+        } else if (!empty($answerregs[ANSWER_REGEX_ANSWER_TYPE_MULTICHOICE_HORIZONTAL_SHUFFLED])) {
+            $wrapped->qtype = 'multichoice';
+            $wrapped->single = 1;
+            $wrapped->shuffleanswers = 1;
             $wrapped->answernumbering = 0;
             $wrapped->correctfeedback['text'] = '';
             $wrapped->correctfeedback['format'] = FORMAT_HTML;
