@@ -188,6 +188,8 @@ class qtype_multianswer_edit_form extends question_edit_form {
                 if ($this->questiondisplay->options->questions[$sub]->qtype == 'multichoice') {
                     $mform->addElement('static', 'sub_'.$sub.'_layout',
                             get_string('layout', 'qtype_multianswer'));
+                    $mform->addElement('static', 'sub_'.$sub.'_shuffleanswers',
+                            get_string('shuffleanswers', 'qtype_multichoice'));
                 }
 
                 foreach ($this->questiondisplay->options->questions[$sub]->answer as $key => $ans) {
@@ -362,6 +364,11 @@ class qtype_multianswer_edit_form extends question_edit_form {
                                 default:
                                     $default_values[$prefix.'layout'] =
                                             get_string('layoutundefined', 'qtype_multianswer');
+                            }
+                            if ($subquestion->shuffleanswers) {
+                                $default_values[$prefix.'shuffleanswers'] = get_string('yes', 'moodle');
+                            } else {
+                                $default_values[$prefix.'shuffleanswers'] = get_string('no', 'moodle');
                             }
                         }
                         foreach ($subquestion->answer as $key => $answer) {
